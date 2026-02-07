@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>187-TH | COMUNIDAD DE MODS</title>
+    <link rel="icon" type="image/gif" href="https://cdn.discordapp.com/attachments/1455604621761315039/1469201524084441119/1729047399178.png?ex=6986cc0b&is=69857a8b&hm=5c16996d52a18603a321bf5a197c4ef1959775b06895ae6926c2574092d86beb">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --accent: #00d4ff; 
+            --accent-dim: rgba(0, 157, 255, 0.512);
+            --accent-glow: rgba(0, 200, 255, 0.8);
+            --bg-dark: #000000;
+            --glass: rgba(0, 0, 0, 0.9);
+            --red-alert: #000000;
+            --success: #00f2ff;
+            --whatsapp: #25D366;
+            --youtube: #FF0000;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background: var(--bg-dark);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            padding-bottom: 120px;
+        }
+
+        .bg-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.92), rgba(0,0,0,0.85)), 
+                        url("https://cdn.discordapp.com/attachments/1444349969497722991/1469442484298842212/1977166E-1BEC-4FCB-B98A-2F02E4BDDD16.gif?ex=6987ac75&is=69865af5&hm=a54800c9fe932288947e98b92a68349448dbc1b271d3dc7090173347eb8d3cc0&");
+            background-size: cover; background-position: center;
+            z-index: -3;
+        }
+
+        #cyber-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2; pointer-events: none; opacity: 0.6;
+        }
+
+        #intro-overlay {
+            position: fixed; inset: 0; background: #000; z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: 0.8s ease-in-out;
+        }
+        
+        .enter-btn {
+            background: transparent; border: 1px solid var(--accent);
+            color: var(--accent); padding: 20px 60px; font-family: 'Orbitron';
+            font-weight: 900; font-size: 1.2rem; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 5px;
+            clip-path: polygon(15% 0, 100% 0, 85% 100%, 0% 100%);
+            transition: 0.4s;
+        }
+        .enter-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 50px var(--accent-glow); transform: scale(1.1); }
+
+        .hero { text-align: center; padding: 60px 20px 30px; }
+        
+        .titulo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 10vw, 5.5rem);
+            font-weight: 900;
+            font-style: italic;
+            color: #ffffff;
+            text-shadow: 4px 4px 0 var(--accent), -2px -2px 0 var(--red-alert);
+            letter-spacing: -3px;
+            text-transform: uppercase;
+        }
+
+        .subtitulo {
+            display: inline-block;
+            background: var(--accent); color: #000000;
+            padding: 5px 20px; font-weight: 900;
+            font-size: 10px; letter-spacing: 5px;
+            margin-top: 10px; transform: skewX(-15deg);
+        }
+
+        .menu-wrapper {
+            position: sticky; top: 0; z-index: 1100;
+            background: rgba(0, 0, 0, 0.85); border-bottom: 2px solid var(--accent);
+            padding: 10px 0; backdrop-filter: blur(10px);
+        }
+        .menu { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; }
+        .menu button {
+            background: none; border: none; color: #fff;
+            padding: 12px 20px; cursor: pointer; font-family: 'Orbitron';
+            font-size: 10px; font-weight: bold; transition: 0.3s;
+            border-left: 1px solid var(--accent-dim);
+        }
+        .menu button:hover, .menu button.activo { background: var(--accent); color: #000000; box-shadow: 0 0 15px var(--accent-glow); }
+
+        .seccion { padding: 40px 20px; max-width: 1400px; margin: auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
+
+        .card {
+            background: var(--glass);
+            border-top: 3px solid var(--accent);
+            border-left: 1px solid var(--accent-dim);
+            padding: 25px; border-radius: 0 20px 0 20px;
+            transition: 0.4s; position: relative;
+        }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px var(--accent-dim); }
+
+        .staff-card { text-align: center; }
+        .avatar {
+            width: 110px; height: 110px; margin: 0 auto 15px;
+            border: 2px solid var(--accent);
+            outline: 3px solid rgba(0, 212, 255, 0.2);
+            outline-offset: 4px;
+            border-radius: 15px; padding: 5px;
+            transition: 0.4s; overflow: hidden;
+        }
+        .staff-card:hover .avatar { transform: rotate(3deg) scale(1.1); outline-color: var(--accent); }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+
+        /* Contenedor de imagen o video */
+        .media-box {
+            position: relative; width: 100%; padding-top: 56.25%;
+            background: #000; margin: 15px 0; border: 1px solid var(--accent-dim);
+            overflow: hidden; border-radius: 5px;
+        }
+        .media-box iframe, .media-box img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .video-box { cursor: pointer; }
+
+        .play-button {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 60px; height: 40px; background: var(--accent); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; z-index: 2;
+        }
+        .play-button::after { content: ''; border-left: 15px solid #fff; border-top: 10px solid transparent; border-bottom: 10px solid transparent; }
+
+        .card h3 { font-family: 'Orbitron'; color: var(--accent); margin-bottom: 10px; }
+        .price { color: var(--success); font-weight: bold; font-size: 1.5rem; text-shadow: 0 0 10px var(--success); margin: 10px 0; }
+
+        .download-link, .buy-link {
+            display: block; width: 100%; padding: 12px; text-align: center;
+            text-decoration: none; font-weight: bold; font-family: 'Orbitron'; font-size: 0.8rem;
+            margin-top: 15px; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
+            transition: 0.3s;
+        }
+        .download-link { background: var(--accent); color: #000; }
+        .buy-link { background: var(--success); color: #000; }
+
+        .encontrarnos {
+            margin-top: 80px; padding: 40px;
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px dashed var(--accent-dim);
+            text-align: center; border-radius: 20px;
+        }
+        .encontrarnos h2 { font-family: 'Orbitron'; color: var(--accent); margin-bottom: 25px; letter-spacing: 3px; }
+        .social-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .social-btn {
+            padding: 12px 25px; color: #fff; text-decoration: none; font-family: 'Orbitron';
+            font-size: 12px; border: 1px solid var(--accent); transition: 0.4s;
+            display: flex; align-items: center; gap: 10px; background: rgba(0, 0, 0, 0.5);
+        }
+        .social-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent-glow); }
+        .social-btn.youtube-style:hover { background: var(--youtube); border-color: var(--youtube); box-shadow: 0 0 20px var(--youtube); }
+        .social-btn.whatsapp-style:hover { background: var(--whatsapp); border-color: var(--whatsapp); box-shadow: 0 0 20px var(--whatsapp); }
+
+        .player-bar {
+            position: fixed; bottom: 30px; left: 30px; 
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px);
+            border-left: 4px solid var(--accent);
+            padding: 15px 25px; display: flex; align-items: center; gap: 20px;
+            z-index: 2000; border-radius: 0 10px 10px 0;
+        }
+        #btn-music { background: none; border: 1px solid var(--accent); color: var(--accent); width: 40px; height: 40px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<canvas id="cyber-canvas"></canvas>
+
+<audio id="click-sound" src="https://files.catbox.moe/ow6i43.mp3"></audio>
+<audio id="musica" loop src="https://files.catbox.moe/1kupsj.mp3"></audio>
+
+<div id="intro-overlay">
+    <img src="https://cdn.discordapp.com/attachments/1455604621761315039/1469202744886821005/DA997540-8377-44C2-8053-0F68FE395025.gif?ex=6986cd2e&is=69857bae&hm=ece5f23fcf2a74b8a03196802448e6c0822116a3bc98c3012bc36dfde5728a4e" style="width:200px; margin-bottom:20px;">
+    <button class="enter-btn" onclick="init()">CLICK AQUI</button>
+</div>
+
+<div id="main-ui" style="display:none">
+    <div class="hero">
+        <div class="titulo">187-TH</div>
+        <div class="subtitulo">COMMUNITY MODS & DATAS</div>
+    </div>
+
+    <div class="menu-wrapper">
+        <div class="menu">
+            <button onclick="tab('equipo', this)" class="activo">ADMINISTRACIÓN</button>
+            <button onclick="tab('aportes', this)">APORTES</button>
+            <button onclick="tab('datas', this)">DATAS</button>
+            <button onclick="tab('tops', this)">APORTES X REQUISITOS</button>
+            <button onclick="tab('venta', this)">APORTES PAGOS - ACA</button>
+        </div>
+    </div>
+
+    <div class="seccion">
+        <div id="grid-content" class="grid"></div>
+
+        <div class="encontrarnos">
+            <h2>¡¡ AQUI SOPORTE Y CONTACTO DIRECTO CON NOSOTROS !!</h2>
+            <div class="social-links">
+                <a href="https://discord.gg/ChGc4eDcQ7" target="_blank" class="social-btn"><i class="fab fa-discord"></i> DISCORD</a>
+                <a href="https://www.youtube.com/@Yith.7" target="_blank" class="social-btn youtube-style"><i class="fab fa-youtube"></i> YOUTUBE</a>
+                <a href="https://wa.me/+584125057144" target="_blank" class="social-btn whatsapp-style"><i class="fab fa-whatsapp"></i> WHATSAPP</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="player-bar">
+    <button id="btn-music" onclick="toggleAudio()"><i id="music-icon" class="fas fa-play"></i></button>
+    <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="setVol(this.value)">
+    <div style="font-size:10px; color:#fff; font-family:'Orbitron'; font-weight: bold;">187-TH AUDIO</div>
+</div>
+
+<script>
+const DATA = {
+    equipo: [
+        {n: "𝒮ℴ𝓀ℴℴ", r: "𝓛𝓪 𝓛𝓮𝔂𝓮𝓷𝓭𝓪", a: "https://cdn.discordapp.com/attachments/1448584441470652447/1469198009593106443/0448437D-6FDD-46DE-B6AF-E4150EC62CE2.gif?ex=6986c8c5&is=69857745&hm=0d563da6c5430366a62b51c0f7d801b38517ce0bfd1a6cd2eb08e87187ca4d1c"},
+        {n: "ℳℴ𝓉𝒾𝓃𝒽𝒶", r: "𝑶𝒘𝒏𝒆𝒓𝒔", a: "https://cdn.discordapp.com/attachments/1455604621761315039/1469222949335728220/C8AE3382-307D-4D49-BB97-4E48AE92387A.gif?ex=6986dfff&is=69858e7f&hm=82b3ace036a7ba26f81d58526847130ba8b1982a196d31bfda5a8ffe30a9513e"},
+        {n: "𝒫𝒶trick", r: "𝑶𝒘𝒏𝒆𝒓𝒔", a: "https://cdn.discordapp.com/attachments/1455604621761315039/1469222537174188136/0FEBC9A3-FEFE-4614-BD54-8B9F24D65F10.gif?ex=6986df9d&is=69858e1d&hm=d365f3a61a3000c2ad6547dfdf75fcf5d2ba9a3c84128e1f9295b7966c8d9c92"},
+        {n: "𝒦𝓇𝒶𝓊𝓈ℯ𝓇", r: "𝑶𝒘𝒏𝒆𝒓𝒔", a: "https://cdn.discordapp.com/attachments/1455604621761315039/1469222233519165471/DDF04BA2-40EF-4669-AB18-BEE3F560A063.gif?ex=6986df55&is=69858dd5&hm=884ccb5192e2bbc0f35ad3e9192c34ee24306a17dd4fc84b97d4e88281e22d33"},
+        {n: "𝒫ℯ𝓉𝓇ℴ𝒢ℴℴ𝒹", r: "𝑶𝒘𝒏𝒆𝒓𝒔", a: "https://cdn.discordapp.com/avatars/1269092776868581419/b6f9e0e544f67fe7838f155558b402c4.png?size=2048"},
+    ],
+    aportes: [
+        {t: "LEV 2.0", c: "𝒮ℴ𝓀ℴℴ", p: "NINGUNA", img: "https://i.postimg.cc/9WkpNHn8/sa-mp-021.png", d: "https://www.mediafire.com/file/7v7ajzv7m42l2hj/GTA+LEV+2.0.rar/file"},
+        // EJEMPLO COMO SUBIR EN IMAGEN Y EN VIDEO (EL PRIMERO ES EN IMAGEN, EL SEGUNDO EN VIDEO):
+        {t: "NOMBRE APORTE", c: "CREADOR", p: "LA CLAVE ACA", img: "ENLACE IMAGEN", d: "#"},
+        {t: "NOMBRE APORTE", c: "CREADOR", p: "LA CLAVE ACA", v: "ID VIDEO YOUTUBE", d: "ENLACE DESCARGA APORTE"},
+    ],
+    datas: [
+        {t: "NOMBRE DATA", c: "CREADOR", p: "LA CLAVE ACA", v: "ID VIDEO", d: "ENLACE DESCARGA DATA"}
+    ],
+    tops: [
+        {t: "NOMBRE TOP", c: "CREADOR", des: 737, v: "ID", d: "ENLACE DESCARGA", p: "LA CLAVE ACA"},
+        {t: "NOMBRE TOP", c: "CREADOR", des: 522, v: "ID", d: "ENLACE DESCARGA", p: "LA CLAVE ACA"}
+    ],
+    venta: [
+        {t: "APORTES", c: "SOKOO", cat: "fps", precio: "PRECIO", v: "ID VIDEO", contacto: "https://discord.gg/ChGc4eDcQ7"}
+    ]
+};
+
+const canvas = document.getElementById('cyber-canvas');
+const ctx = canvas.getContext('2d');
+let width, height;
+
+function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+window.addEventListener('resize', resize);
+resize();
+
+function loop() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = '#00d4ff15';
+    for(let i=0; i<20; i++) ctx.fillRect(Math.random()*width, Math.random()*height, 1, 12);
+    requestAnimationFrame(loop);
+}
+
+const audio = document.getElementById('musica');
+const btnIcon = document.getElementById('music-icon');
+
+function init() {
+    document.getElementById('click-sound').play();
+    document.getElementById('intro-overlay').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('intro-overlay').style.display = 'none';
+        document.getElementById('main-ui').style.display = 'block';
+        tab('equipo', document.querySelector('.menu button'));
+        loop();
+        audio.play();
+        btnIcon.className = 'fas fa-pause';
+    }, 600);
+}
+
+function loadVideo(div, id) {
+    div.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+}
+
+function tab(type, btn) {
+    document.querySelectorAll('.menu button').forEach(b => b.classList.remove('activo'));
+    btn.classList.add('activo');
+    const container = document.getElementById('grid-content');
+    container.innerHTML = '';
+
+    DATA[type].forEach(i => {
+        if(type === 'equipo') {
+            container.innerHTML += `<div class="card staff-card"><div class="avatar"><img src="${i.a}"></div><h3>${i.n}</h3><div style="font-size:10px; color:#ffffff; font-weight:bold; letter-spacing:1px;">${i.r}</div></div>`;
+        } else {
+            // LÓGICA DE MULTIMEDIA (VIDEO O IMAGEN)
+            let media = '';
+            if (i.v) {
+                media = `<div class="media-box video-box" onclick="loadVideo(this, '${i.v}')"><img class="video-thumbnail" src="https://i.ytimg.com/vi/${i.v}/hqdefault.jpg"><div class="play-button"></div></div>`;
+            } else if (i.img) {
+                media = `<div class="media-box"><img src="${i.img}" alt="Preview"></div>`;
+            }
+
+            let pass = i.p ? `<p style="font-size:12px; margin:5px 0;"><b>CONTRASEÑA:</b> <span style="color:var(--accent); font-weight: 900; font-size: 13px;">${i.p}</span></p>` : '';
+            let extra = type === 'venta' ? `<div class="price">${i.precio}</div>` : '';
+            let btnClass = type === 'venta' ? 'buy-link' : 'download-link';
+            let btnTxt = type === 'venta' ? 'COMPRAR' : 'DESCARGAR';
+            let link = type === 'venta' ? i.contacto : i.d;
+
+            container.innerHTML += `
+                <div class="card">
+                    <h3>${i.t}</h3>
+                    <p><b>CREADOR:</b> ${i.c}</p>
+                    ${pass}
+                    ${extra}
+                    ${media}
+                    <a href="${link}" class="${btnClass}" target="_blank">${btnTxt}</a>
+                </div>`;
+        }
+    });
+}
+
+function toggleAudio() {
+    if(audio.paused) { audio.play(); btnIcon.className = 'fas fa-pause'; }
+    else { audio.pause(); btnIcon.className = 'fas fa-play'; }
+}
+function setVol(v) { audio.volume = v; }
+</script>
+
+</body>
+</html>
