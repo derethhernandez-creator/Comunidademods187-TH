@@ -3,10 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>187-TH | COMUNIDAD DE MODS</title>
+    
+    <title>187-TH | Comunidad de Mods, Datas y Recursos</title>
+    <meta name="description" content="La mejor comunidad de modding. Descarga mods exclusivos, datas optimizadas y recursos premium para potenciar tu juego al máximo.">
+    <meta name="keywords" content="187-TH, mods, datas, comunidad de mods, descargas gta, recursos gaming">
+    <meta name="author" content="187-TH Team">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tu-sitio-web.com/"> <meta property="og:title" content="187-TH | COMUNIDAD DE MODS">
+    <meta property="og:description" content="Entra a la base de datos de 187-TH. Mods, Datas y contenido exclusivo para la comunidad.">
+    <meta property="og:image" content="https://i.postimg.cc/gJxYS4v3/1729047399178.png"> <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="187-TH | COMUNIDAD DE MODS">
+    <meta property="twitter:description" content="Mods exclusivos y optimización para tu juego.">
+    <meta property="twitter:image" content="https://i.postimg.cc/gJxYS4v3/1729047399178.png">
+    <meta name="theme-color" content="#00d4ff">
     <link rel="icon" type="image/gif" href="https://i.postimg.cc/gJxYS4v3/1729047399178.png">
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
     <style>
         :root {
             --accent: #00d4ff; 
@@ -47,7 +61,6 @@
             z-index: -2; pointer-events: none; opacity: 0.6;
         }
 
-        /* INYECCIÓN RECOMENDACIÓN 5: STATUS ONLINE */
         .status-live {
             position: fixed; top: 20px; left: 20px;
             display: none; align-items: center; gap: 10px;
@@ -111,6 +124,39 @@
             padding: 5px 20px; font-weight: 900;
             font-size: 10px; letter-spacing: 5px;
             margin-top: 15px; transform: skewX(-15deg);
+        }
+
+        /* BUSCADOR */
+        .search-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 20px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--accent-dim);
+            padding: 12px 45px 12px 15px;
+            color: #fff;
+            font-family: 'Orbitron';
+            font-size: 13px;
+            outline: none;
+            transition: 0.3s;
+            border-radius: 5px;
+            text-transform: uppercase;
+        }
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .search-icon {
+            position: absolute;
+            right: 35px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+            pointer-events: none;
         }
 
         .seccion-header-dinamico {
@@ -373,6 +419,11 @@
         </div>
     </div>
 
+    <div id="search-bar-container" class="search-container" style="display:none;">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="mod-search" class="search-input" placeholder="BUSCAR POR NOMBRE O CREADOR..." onkeyup="filterContent()">
+    </div>
+
     <div class="seccion">
         <div id="seccion-header" class="seccion-header-dinamico"></div>
         <div id="grid-content" class="grid"></div>
@@ -438,7 +489,6 @@ function loop() {
 const audio = document.getElementById('musica');
 const btnIcon = document.getElementById('music-icon');
 
-// FUNCIÓN PARA ACTUALIZAR NÚMERO ONLINE ALEATORIAMENTE (INYECCIÓN 5)
 function updateOnline() {
     const count = Math.floor(Math.random() * (195 - 170 + 1) + 170);
     document.getElementById('online-count').innerText = count;
@@ -451,7 +501,6 @@ function init() {
         document.getElementById('intro-overlay').style.display = 'none';
         document.getElementById('main-ui').style.display = 'block';
         document.getElementById('player-music-bar').style.display = 'flex';
-        // MOSTRAR INDICADOR LIVE
         document.getElementById('live-indicator').style.display = 'flex';
         setInterval(updateOnline, 5000); 
         
@@ -481,16 +530,37 @@ function copyPass(text) {
     setTimeout(() => { toast.style.display = 'none'; }, 2000);
 }
 
+// FILTRADO
+function filterContent() {
+    const searchTerm = document.getElementById('mod-search').value.toLowerCase();
+    const cards = document.querySelectorAll('#grid-content .card');
+
+    cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(searchTerm) ? "" : "none";
+    });
+}
+
 function tab(type, btn) {
     document.querySelectorAll('.menu button').forEach(b => b.classList.remove('activo'));
     btn.classList.add('activo');
-        
+    
+    document.getElementById('mod-search').value = "";
+    const searchBar = document.getElementById('search-bar-container');
     const container = document.getElementById('grid-content');
     const header = document.getElementById('seccion-header');
     const footerContact = document.getElementById('footer-contacto');
         
     container.innerHTML = '';
     header.innerHTML = '';
+
+    // CONTROL DE VISIBILIDAD DEL BUSCADOR
+    // Se oculta en 'equipo' (Administración) y 'venta'
+    if(type === 'equipo' || type === 'venta') {
+        searchBar.style.display = 'none';
+    } else {
+        searchBar.style.display = 'block';
+    }
 
     if(type === 'venta') {
         footerContact.style.display = 'none';
@@ -518,14 +588,10 @@ function tab(type, btn) {
     if (DATA[type]) {
         DATA[type].forEach(i => {
             if(type === 'equipo') {
-                // INYECCIÓN 6: loading="lazy" en avatars
                 container.innerHTML += `<div class="card staff-card"><div class="avatar"><img src="${i.a}" loading="lazy"></div><h3>${i.n}</h3><div style="font-size:10px; color:#ffffff; font-weight:bold; letter-spacing:1px;">${i.r}</div></div>`;
             } else {
-                // INYECCIÓN 6: loading="lazy" en previews de mods
                 let media = i.v ? `<div class="media-box video-box" onclick="loadVideo(this, '${i.v}')"><img class="video-thumbnail" src="https://i.ytimg.com/vi/${i.v}/hqdefault.jpg" loading="lazy"><div class="play-button"></div></div>` : (i.img ? `<div class="media-box"><img src="${i.img}" alt="Preview" onclick="openZoom('${i.img}')" loading="lazy"></div>` : '');
-                
                 let pass = i.p ? `<p style="font-size:13px; margin:8px 0; color:#fff;"><b style="font-family:'Orbitron'; font-weight:900;">CONTRASEÑA:</b> <span class="pass-badge" onclick="copyPass('${i.p}')" style="color:var(--pass-color); font-weight: 900; font-size: 14px; text-shadow: 0 0 5px var(--pass-color);"><i class="fas fa-copy" style="margin-right:5px; font-size:11px;"></i>${i.p}</span></p>` : '';
-                
                 let creator = `<p style="font-size:13px; margin:8px 0; color:#fff;"><b style="font-family:'Orbitron'; font-weight:900;">CREADOR:</b> <span style="font-weight: 900; color: var(--accent); font-size: 14px; text-transform: uppercase;">${i.c}</span></p>`;
 
                 container.innerHTML += `
