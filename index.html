@@ -500,7 +500,7 @@
 <div class="bg-glow"></div><canvas id="cyber-canvas"></canvas><div id="copy-notif" class="copy-toast">¡CONTRASEÑA COPIADA!</div>
 
 <audio id="click-sound" src="https://files.catbox.moe/g053j3.mp3" preload="auto"></audio>
-<audio id="musica" loop crossorigin="anonymous" src="https://files.catbox.moe/yg3iwc.mp3" preload="auto"></audio>
+<audio id="musica" loop src="https://files.catbox.moe/yg3iwc.mp3" preload="auto"></audio>
 
 <div id="intro-overlay">
     <img src="https://i.postimg.cc/k4YWk9Sw/a779679ec40164b9b49a56487828cad2.gif" style="width:200px; margin-bottom:20px;">
@@ -639,7 +639,7 @@ function loop() {
 }
 
 /* ----------------------------------------------------------------
-   SISTEMA DE AUDIO MEJORADO (SIN RESTRICCIONES)
+   SISTEMA DE AUDIO MEJORADO (SIN RESTRICTIONES NI API COMPLEX)
    ---------------------------------------------------------------- */
 const audio = document.getElementById('musica');
 const btnIcon = document.getElementById('music-icon');
@@ -654,7 +654,7 @@ if(savedVol !== null) {
     audio.volume = 0.5;
 }
 
-// Visualizador Compatible (Sin API Restrictions)
+// Visualizador "Fake" pero Seguro (Funciona en todos los dispositivos sin CORS)
 function startVisualizer() {
     const bars = document.querySelectorAll('.equalizer .bar');
     function visualizeLoop() {
@@ -663,7 +663,7 @@ function startVisualizer() {
             bars.forEach(b => b.style.height = '4px');
             return;
         }
-        // Simulamos movimiento de forma segura sin CORS
+        // Movimiento simulado matemáticamente (No requiere permisos de micrófono ni audio)
         const h1 = Math.random() > 0.5 ? Math.random() * 20 + 5 : Math.random() * 10 + 5;
         const h2 = Math.random() * 25 + 5;
         const h3 = Math.random() * 15 + 5;
@@ -687,17 +687,15 @@ function updateOnline() {
 
 // FUNCION DE INICIO ROBUSTA
 function init() {
-    // 1. REPRODUCIR SONIDO DE CLICK (ÚNICA VEZ)
     const clickAudio = document.getElementById('click-sound');
+    
+    // 1. INTENTAR REPRODUCIR CLICK (Sin bloquear si falla)
     if (clickAudio) {
         clickAudio.volume = 0.6;
-        var playPromise = clickAudio.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(error => { console.log("Click sound blocked (minor)"); });
-        }
+        clickAudio.play().catch(e => console.log("Click sound skipped (normal on some mobiles)"));
     }
     
-    // 2. INICIAR MÚSICA DE FONDO (Forzar Play en Interacción de Usuario)
+    // 2. INICIAR MÚSICA DE FONDO (Con manejo de promesas para evitar errores rojos)
     var musicPromise = audio.play();
     if (musicPromise !== undefined) {
         musicPromise.then(_ => {
@@ -705,8 +703,8 @@ function init() {
             btnIcon.className = 'fas fa-pause';
             startVisualizer();
         }).catch(error => {
-            // Si el navegador bloquea, mostramos icono play para hacerlo manual
-            console.log("Audio preventivo del navegador. Usuario debe dar play manual.");
+            // Si el navegador es muy estricto, mostramos icono play para hacerlo manual
+            console.log("Audio waiting for interaction.");
             btnIcon.className = 'fas fa-play';
         });
     }
@@ -846,7 +844,7 @@ function toggleAudio() {
     if(audio.paused) { 
         audio.play().then(() => {
             btnIcon.className = 'fas fa-pause';
-            startVisualizer(); // Reactiva el visualizador si estaba detenido
+            startVisualizer(); 
         }).catch(e => console.log("Error al reproducir:", e));
     } 
     else { 
