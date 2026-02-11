@@ -190,10 +190,8 @@
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(1rem, 4vw, 1.5rem);
             color: #fff; text-transform: uppercase; letter-spacing: 3px;
-            /* text-shadow REMOVIDO PARA EVITAR CANSANCIO VISUAL */
             display: inline-block;
             padding-bottom: 10px;
-            /* border-bottom REMOVIDO PARA EVITAR CANSANCIO VISUAL */
             margin-bottom: 40px;
             max-width: 800px;
         }
@@ -247,14 +245,12 @@
 
         .staff-card h3 { 
             color: var(--admin-name-color) !important;
-            /* [CORREGIDO] Sombra de texto dinámica */
             text-shadow: 0 0 10px var(--accent);
         }
         .staff-card { text-align: center; }
         .avatar {
             width: 110px;
             height: 110px; margin: 0 auto 15px; border: 2px solid var(--accent);
-            /* [CORREGIDO] Outline dinámico */
             outline: 3px solid var(--accent-dim);
             outline-offset: 4px; border-radius: 15px; padding: 5px; transition: 0.4s; overflow: hidden;
         }
@@ -288,7 +284,7 @@
 
         .card h3 { 
             font-family: 'Orbitron', sans-serif;
-            color: var(--accent); margin-bottom: 0px; /* Reducido para la linea */
+            color: var(--accent); margin-bottom: 0px; 
             text-transform: uppercase;
             font-weight: 900; font-size: 1.4rem; letter-spacing: 2px;
         }
@@ -344,15 +340,12 @@
         .encontrarnos {
             margin-top: 80px;
             padding: 40px; 
-            /* [CORREGIDO] Fondo dinámico muy sutil */
             background: var(--accent-transparent);
             border: 1px dashed var(--accent-dim); text-align: center; border-radius: 20px;
         }
-        .encontrarnos h2 { font-family: 'Orbitron';
-            color: var(--accent); margin-bottom: 25px; letter-spacing: 3px; }
+        .encontrarnos h2 { font-family: 'Orbitron'; color: var(--accent); margin-bottom: 25px; letter-spacing: 3px; }
         
-        .social-links { display: flex;
-            justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .social-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
         
         .social-btn {
             padding: 12px 25px;
@@ -372,7 +365,6 @@
             background: var(--discord);
             color: #fff; 
             box-shadow: 0 0 20px var(--discord), 0 0 40px var(--discord);
-            /* Destello doble */
         }
 
         /* YOUTUBE ESTILO (Rojo) */
@@ -381,7 +373,6 @@
             background: var(--youtube);
             border-color: var(--youtube); color: #fff; 
             box-shadow: 0 0 20px var(--youtube), 0 0 40px var(--youtube);
-            /* Destello doble */
         }
 
         /* WHATSAPP ESTILO (Verde) */
@@ -390,7 +381,6 @@
             background: var(--whatsapp);
             border-color: var(--whatsapp); color: #fff; 
             box-shadow: 0 0 20px var(--whatsapp), 0 0 40px var(--whatsapp);
-            /* Destello doble */
         }
 
         /* INSTAGRAM ESTILO (Magenta) */
@@ -399,7 +389,6 @@
             background: var(--instagram);
             border-color: var(--instagram); color: #fff; 
             box-shadow: 0 0 20px var(--instagram), 0 0 40px var(--instagram);
-            /* Destello doble */
         }
 
         /* NUEVO ESTILO DEL REPRODUCTOR DE MÚSICA */
@@ -428,12 +417,10 @@
         #btn-music:hover { transform: scale(1.1); background: #fff; }
 
         /* Slider de Volumen */
-        input[type="range"] { -webkit-appearance: none;
-            width: 80px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 5px; outline: none;
-        }
+        input[type="range"] { -webkit-appearance: none; width: 80px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 5px; outline: none; }
         input[type="range"]::-webkit-slider-thumb { 
             -webkit-appearance: none;
-            width: 18px; /* [MEJORA ANDROID] Un poco más grande para dedos */
+            width: 18px;
             height: 18px;
             border-radius: 50%; background: var(--accent);
             cursor: pointer; box-shadow: 0 0 10px var(--accent); transition: 0.2s;
@@ -445,7 +432,7 @@
         .bar {
             width: 5px;
             background: var(--accent); border-radius: 2px;
-            height: 4px; transition: height 0.05s linear; box-shadow: 0 0 5px var(--accent);
+            height: 4px; transition: height 0.1s linear; box-shadow: 0 0 5px var(--accent);
         }
 
         .player-label {
@@ -477,14 +464,13 @@
         .copy-toast {
             position: fixed;
             top: 20px; right: 20px; 
-            background: var(--pass-color) !important; /* Ahora sigue el color del tema */
+            background: var(--pass-color) !important;
             color: #000;
             padding: 10px 25px; font-family: 'Orbitron'; font-weight: bold; font-size: 12px;
             clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
             display: none;
             z-index: 30000; animation: slideIn 0.3s ease;
             box-shadow: 0 0 20px var(--accent-dim);
-            /* [CORREGIDO] Eliminado el borde blanco feo de las esquinas */
             border: none;
         }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
@@ -512,8 +498,8 @@
 
 <div class="bg-glow"></div><canvas id="cyber-canvas"></canvas><div id="copy-notif" class="copy-toast">¡CONTRASEÑA COPIADA!</div>
 
-<audio id="click-sound" src="https://files.catbox.moe/g053j3.mp3"></audio>
-<audio id="musica" loop crossorigin="anonymous" src="https://files.catbox.moe/yg3iwc.mp3"></audio>
+<audio id="click-sound" src="https://files.catbox.moe/g053j3.mp3" preload="auto"></audio>
+<audio id="musica" loop crossorigin="anonymous" src="https://files.catbox.moe/yg3iwc.mp3" preload="auto"></audio>
 
 <div id="intro-overlay">
     <img src="https://i.postimg.cc/k4YWk9Sw/a779679ec40164b9b49a56487828cad2.gif" style="width:200px; margin-bottom:20px;">
@@ -596,7 +582,6 @@ const DATA = {
         {n: "𝑅𝑖𝑜 𝐹𝑒𝑟𝑑𝑖𝑛𝑎𝑛𝑑", r: "𝑶𝑾𝑵𝑬𝑹𝑺", a: "https://i.postimg.cc/6pDGnGKq/rio-ferdinand.png"},
     ],
     aportes: [
-        /* [AGREGADO] Ejemplo con etiquetas */
         {t: "LEV 2.0", c: "SOKOO", p: "NINGUNA", img: "https://i.postimg.cc/9WkpNHn8/sa-mp-021.png", d: "https://www.mediafire.com/file/7v7ajzv7m42l2hj/GTA+LEV+2.0.rar/file", tags: ["NUEVO", "FPS UP", "233MB"]},
     ],
     datas: [
@@ -607,9 +592,9 @@ const DATA = {
     ],
     venta: []
 };
+
 // LÓGICA PARA CAMBIAR EL COLOR + PERSISTENCIA
 let currentThemeIndex = localStorage.getItem('savedThemeIdx') ? parseInt(localStorage.getItem('savedThemeIdx')) : 0;
-// [MEJORADO] Se agregan colores base y transparente para efectos de brillo (destello)
 const themes = [
     { primary: '#00d4ff', dim: 'rgba(0, 157, 255, 0.5)', transparent: 'rgba(0, 157, 255, 0.05)' }, // Cyan
     { primary: '#ff00ff', dim: 'rgba(255, 0, 255, 0.5)', transparent: 'rgba(255, 0, 255, 0.05)' }, // Pink
@@ -617,6 +602,7 @@ const themes = [
     { primary: '#ffcc00', dim: 'rgba(255, 204, 0, 0.5)', transparent: 'rgba(255, 204, 0, 0.05)' }, // Gold
     { primary: '#ff0000', dim: 'rgba(255, 0, 0, 0.5)', transparent: 'rgba(255, 0, 0, 0.05)' }     // Red
 ];
+
 function applyTheme(index) {
     const theme = themes[index];
     const root = document.documentElement.style;
@@ -628,19 +614,16 @@ function applyTheme(index) {
     root.setProperty('--title-card-color', theme.primary);
     root.setProperty('--admin-name-color', theme.primary);
     root.setProperty('--success', theme.primary);
-    // [CORREGIDO] Ahora la contraseña y el toast SÍ cambian de color
     root.setProperty('--pass-color', theme.primary);
 }
 
-// Aplicar tema guardado inmediatamente
 applyTheme(currentThemeIndex);
+
 function changeTheme() {
     currentThemeIndex = (currentThemeIndex + 1) % themes.length;
     applyTheme(currentThemeIndex);
     localStorage.setItem('savedThemeIdx', currentThemeIndex);
-    // Safe play click
-    const clickSnd = document.getElementById('click-sound');
-    if(clickSnd) { clickSnd.volume = 0.5; clickSnd.currentTime = 0; clickSnd.play().catch(e=>{}); }
+    // NOTA: Se eliminó playClickSound() de aquí como solicitaste.
 }
 
 const canvas = document.getElementById('cyber-canvas');
@@ -656,90 +639,47 @@ function loop() {
     requestAnimationFrame(loop);
 }
 
+/* ----------------------------------------------------------------
+   SISTEMA DE AUDIO
+   ---------------------------------------------------------------- */
 const audio = document.getElementById('musica');
 const btnIcon = document.getElementById('music-icon');
+const volSlider = document.getElementById('vol-slider');
+
 // Cargar volumen guardado
 const savedVol = localStorage.getItem('audioVolume');
 if(savedVol !== null) {
-    document.getElementById('vol-slider').value = savedVol;
+    volSlider.value = savedVol;
+    audio.volume = savedVol;
+} else {
+    audio.volume = 0.5;
 }
 
-// [MODIFICADO] Lógica blindada para PC y Móvil
-let audioContext, analyser, dataArray, source, gainNode;
-let visualizerActive = false; // Flag crucial
-
-function setupRealVisualizer() {
-    const audioEl = document.getElementById('musica');
+// Visualizador Simulado (Robusto para Móviles)
+function startVisualizer() {
+    const bars = document.querySelectorAll('.equalizer .bar');
     
-    // Crear el contexto si no existe
-    if (!audioContext) {
-        try {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        } catch(e) {
-            console.log("Web Audio API no soportada");
+    function visualizeLoop() {
+        requestAnimationFrame(visualizeLoop);
+        
+        if(audio.paused) {
+            bars.forEach(b => b.style.height = '4px');
             return;
         }
-    }
-    
-    // Si está suspendido, reanudar
-    if (audioContext.state === 'suspended') {
-        audioContext.resume();
-    }
 
-    // Configurar visualizador solo si no se ha hecho antes
-    if (!gainNode) {
-        try {
-            analyser = audioContext.createAnalyser();
-            gainNode = audioContext.createGain();
-            
-            // INTENTO DE CONEXIÓN (Puede fallar en PC por CORS)
-            source = audioContext.createMediaElementSource(audioEl);
-            
-            source.connect(gainNode);
-            gainNode.connect(analyser);
-            analyser.connect(audioContext.destination);
-            
-            // Si llegamos aquí, el visualizador funciona
-            visualizerActive = true; 
-            
-            analyser.fftSize = 64; 
-            const bufferLength = analyser.frequencyBinCount;
-            dataArray = new Uint8Array(bufferLength);
-            animateBars();
-            
-        } catch(error) {
-            console.warn("CORS/Security Block: Visualizador desactivado para asegurar audio.", error);
-            visualizerActive = false;
-            // No conectamos nada al context, dejamos que el audio tag suene natural
-        }
-    }
-    
-    // Sincronizar volumen inicial
-    const vol = localStorage.getItem('audioVolume') || 0.5;
-    setVol(vol);
-}
+        // Simulamos movimiento
+        const h1 = Math.random() > 0.5 ? Math.random() * 20 + 5 : Math.random() * 10 + 5;
+        const h2 = Math.random() * 25 + 5;
+        const h3 = Math.random() * 15 + 5;
+        const volMult = audio.volume < 0.1 ? 0.5 : 1; 
 
-function animateBars() {
-    if(!visualizerActive) return; // Ahorrar recursos si falló
-    
-    requestAnimationFrame(animateBars);
-    if(analyser) {
-        analyser.getByteFrequencyData(dataArray);
-        const bars = document.querySelectorAll('.equalizer .bar');
-        if(bars.length < 3) return;
+        bars[0].style.height = (h1 * volMult) + 'px';
+        bars[1].style.height = (h2 * volMult) + 'px';
+        bars[2].style.height = (h3 * volMult) + 'px';
         
-        const val1 = dataArray[2] / 255; 
-        const val2 = dataArray[6] / 255;
-        const val3 = dataArray[12] / 255; 
-
-        bars[0].style.height = Math.max(4, val1 * 25) + 'px';
-        bars[1].style.height = Math.max(4, val2 * 35) + 'px';
-        bars[2].style.height = Math.max(4, val3 * 25) + 'px';
-        bars.forEach((b, i) => {
-            const intensity = [val1, val2, val3][i];
-            b.style.opacity = 0.5 + (intensity * 0.5);
-        });
+        bars.forEach(b => b.style.opacity = 0.6 + Math.random() * 0.4);
     }
+    visualizeLoop();
 }
 
 function updateOnline() {
@@ -749,14 +689,25 @@ function updateOnline() {
     document.getElementById('online-count').innerText = count;
 }
 
+// FUNCION DE INICIO (Único lugar donde suena el Click Sound)
 function init() {
-    // 1. Sonido Click
-    const clickSnd = document.getElementById('click-sound');
-    if(clickSnd) { clickSnd.volume = 0.5; clickSnd.play().catch(e => console.log("Click play failed")); }
+    // 1. REPRODUCIR SONIDO DE CLICK (ÚNICA VEZ)
+    const clickAudio = document.getElementById('click-sound');
+    if (clickAudio) {
+        clickAudio.volume = 0.5;
+        clickAudio.play().catch(e => console.log("Error playing click:", e));
+    }
     
-    // 2. Iniciar Audio Context (CRUCIAL HACERLO EN CLICK)
-    setupRealVisualizer();
+    // 2. INICIAR MÚSICA
+    audio.play().then(() => {
+        btnIcon.className = 'fas fa-pause';
+        startVisualizer(); 
+    }).catch(e => {
+        console.log("Autoplay bloqueado, usar botón play manual");
+        btnIcon.className = 'fas fa-play';
+    });
 
+    // 3. ANIMACIÓN UI
     document.getElementById('intro-overlay').style.opacity = '0';
     setTimeout(() => {
         document.getElementById('intro-overlay').style.display = 'none';
@@ -767,16 +718,9 @@ function init() {
         
         updateOnline(); 
         setInterval(updateOnline, 5000); 
+       
         tab('equipo', document.querySelector('.menu button'));
-        loop();
-        
-        // 3. Play Music
-        audio.play().then(() => {
-            btnIcon.className = 'fas fa-pause';
-        }).catch(e => {
-            console.log("Autoplay bloqueado, esperando interacción");
-            btnIcon.className = 'fas fa-play';
-        });
+        loop(); 
 
     }, 600);
 }
@@ -793,6 +737,7 @@ function openZoom(url) {
 }
 
 function copyPass(text) {
+    // SIN SONIDO AQUI
     navigator.clipboard.writeText(text);
     const toast = document.getElementById('copy-notif');
     toast.style.display = 'block';
@@ -822,6 +767,7 @@ function filterContent() {
 }
 
 function tab(type, btn) {
+    // SIN SONIDO AQUI
     document.querySelectorAll('.menu button').forEach(b => b.classList.remove('activo'));
     btn.classList.add('activo');
     
@@ -871,7 +817,6 @@ function tab(type, btn) {
             } else {
                 let media = i.v ? `<div class="media-box video-box" onclick="loadVideo(this, '${i.v}')"><img class="video-thumbnail" src="https://i.ytimg.com/vi/${i.v}/hqdefault.jpg" loading="lazy"><div class="play-button"></div></div>` : (i.img ? `<div class="media-box"><img src="${i.img}" alt="Preview" onclick="openZoom('${i.img}')" loading="lazy"></div>` : '');
                 
-                // [CORREGIDO] Pass ahora usa la variable dinámica global, no estática
                 let pass = i.p ? `<p style="font-size:13px; margin:8px 0; color:#fff;"><b style="font-family:'Orbitron'; font-weight:900;">CONTRASEÑA:</b> <span class="pass-badge" onclick="copyPass('${i.p}')" style="color:var(--pass-color); font-weight: 900; font-size: 14px; text-shadow: 0 0 5px var(--pass-color);"><i class="fas fa-copy" style="margin-right:5px; font-size:11px;"></i>${i.p}</span></p>` : '';
                 let creator = `<p style="font-size:13px; margin:8px 0; color:#fff;"><b style="font-family:'Orbitron'; font-weight:900;">CREADOR:</b> <span style="font-weight: 900; color: var(--accent); font-size: 14px; text-transform: uppercase;">${i.c}</span></p>`;
 
@@ -898,14 +843,11 @@ function tab(type, btn) {
 }
 
 function toggleAudio() {
-    // Si el contexto existe y está suspendido, despertarlo
-    if(audioContext && audioContext.state === 'suspended') {
-        audioContext.resume();
-    }
-    
+    // SIN SONIDO DE CLICK AQUI (Solo pausa/play música)
     if(audio.paused) { 
-        audio.play();
-        btnIcon.className = 'fas fa-pause'; 
+        audio.play().then(() => {
+            btnIcon.className = 'fas fa-pause'; 
+        }).catch(e => console.log("Play error", e));
     } 
     else { 
         audio.pause(); 
@@ -913,17 +855,8 @@ function toggleAudio() {
     }
 }
 
-// [FIX] Función de volumen compatible con AMBOS modos (Visualizador y Normal)
 function setVol(v) { 
     localStorage.setItem('audioVolume', v);
-    
-    // Si el visualizador está activo, controlamos su ganancia
-    if(gainNode && visualizerActive) {
-        gainNode.gain.value = v;
-    }
-    
-    // Y SIEMPRE controlamos el audio.volume también (para fallback o móvil directo)
-    // Esto asegura que si falla el visualizador, el slider siga sirviendo
     audio.volume = v;
 }
 </script>
