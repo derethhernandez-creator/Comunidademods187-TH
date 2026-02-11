@@ -252,7 +252,8 @@
             width: 110px;
             height: 110px; margin: 0 auto 15px; border: 2px solid var(--accent);
             outline: 3px solid var(--accent-dim);
-            outline-offset: 4px; border-radius: 15px; padding: 5px; transition: 0.4s; overflow: hidden;
+            outline-offset: 4px; border-radius: 15px; padding: 5px;
+            transition: 0.4s; overflow: hidden;
         }
         .staff-card:hover .avatar { transform: rotate(3deg) scale(1.1); outline-color: var(--accent); }
         .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
@@ -542,11 +543,8 @@
             <h2>¡¡ AQUÍ NUESTRAS PLATAFORMAS OFICIALES !!</h2>
             <div class="social-links">
                 <a href="https://discord.gg/ChGc4eDcQ7" target="_blank" class="social-btn discord-style"><i class="fab fa-discord"></i> DISCORD</a>
-                
                 <a href="https://www.youtube.com/@Yith.7" target="_blank" class="social-btn youtube-style"><i class="fab fa-youtube"></i> YOUTUBE</a>
-                
                 <a href="https://wa.me/+584125057144" target="_blank" class="social-btn whatsapp-style"><i class="fab fa-whatsapp"></i> WHATSAPP</a>
-
                 <a href="POR DEFINIR EL LINK" target="_blank" class="social-btn instagram-style"><i class="fab fa-instagram"></i> INSTAGRAM</a>
             </div>
         </div>
@@ -623,15 +621,16 @@ function changeTheme() {
     currentThemeIndex = (currentThemeIndex + 1) % themes.length;
     applyTheme(currentThemeIndex);
     localStorage.setItem('savedThemeIdx', currentThemeIndex);
-    // NOTA: Se eliminó playClickSound() de aquí como solicitaste.
 }
 
 const canvas = document.getElementById('cyber-canvas');
 const ctx = canvas.getContext('2d');
 let width, height;
+
 function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
 window.addEventListener('resize', resize);
 resize();
+
 function loop() {
     ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent') + '33';
@@ -640,7 +639,7 @@ function loop() {
 }
 
 /* ----------------------------------------------------------------
-   SISTEMA DE AUDIO
+   SISTEMA DE AUDIO MEJORADO (SIN RESTRICCIONES)
    ---------------------------------------------------------------- */
 const audio = document.getElementById('musica');
 const btnIcon = document.getElementById('music-icon');
@@ -655,24 +654,21 @@ if(savedVol !== null) {
     audio.volume = 0.5;
 }
 
-// Visualizador Simulado (Robusto para Móviles)
+// Visualizador Compatible (Sin API Restrictions)
 function startVisualizer() {
     const bars = document.querySelectorAll('.equalizer .bar');
-    
     function visualizeLoop() {
         requestAnimationFrame(visualizeLoop);
-        
         if(audio.paused) {
             bars.forEach(b => b.style.height = '4px');
             return;
         }
-
-        // Simulamos movimiento
+        // Simulamos movimiento de forma segura sin CORS
         const h1 = Math.random() > 0.5 ? Math.random() * 20 + 5 : Math.random() * 10 + 5;
         const h2 = Math.random() * 25 + 5;
         const h3 = Math.random() * 15 + 5;
-        const volMult = audio.volume < 0.1 ? 0.5 : 1; 
-
+        const volMult = audio.volume < 0.1 ? 0.5 : 1;
+        
         bars[0].style.height = (h1 * volMult) + 'px';
         bars[1].style.height = (h2 * volMult) + 'px';
         bars[2].style.height = (h3 * volMult) + 'px';
@@ -689,23 +685,31 @@ function updateOnline() {
     document.getElementById('online-count').innerText = count;
 }
 
-// FUNCION DE INICIO (Único lugar donde suena el Click Sound)
+// FUNCION DE INICIO ROBUSTA
 function init() {
     // 1. REPRODUCIR SONIDO DE CLICK (ÚNICA VEZ)
     const clickAudio = document.getElementById('click-sound');
     if (clickAudio) {
-        clickAudio.volume = 0.5;
-        clickAudio.play().catch(e => console.log("Error playing click:", e));
+        clickAudio.volume = 0.6;
+        var playPromise = clickAudio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => { console.log("Click sound blocked (minor)"); });
+        }
     }
     
-    // 2. INICIAR MÚSICA
-    audio.play().then(() => {
-        btnIcon.className = 'fas fa-pause';
-        startVisualizer(); 
-    }).catch(e => {
-        console.log("Autoplay bloqueado, usar botón play manual");
-        btnIcon.className = 'fas fa-play';
-    });
+    // 2. INICIAR MÚSICA DE FONDO (Forzar Play en Interacción de Usuario)
+    var musicPromise = audio.play();
+    if (musicPromise !== undefined) {
+        musicPromise.then(_ => {
+            // Autoplay exitoso
+            btnIcon.className = 'fas fa-pause';
+            startVisualizer();
+        }).catch(error => {
+            // Si el navegador bloquea, mostramos icono play para hacerlo manual
+            console.log("Audio preventivo del navegador. Usuario debe dar play manual.");
+            btnIcon.className = 'fas fa-play';
+        });
+    }
 
     // 3. ANIMACIÓN UI
     document.getElementById('intro-overlay').style.opacity = '0';
@@ -718,7 +722,7 @@ function init() {
         
         updateOnline(); 
         setInterval(updateOnline, 5000); 
-       
+        
         tab('equipo', document.querySelector('.menu button'));
         loop(); 
 
@@ -737,7 +741,6 @@ function openZoom(url) {
 }
 
 function copyPass(text) {
-    // SIN SONIDO AQUI
     navigator.clipboard.writeText(text);
     const toast = document.getElementById('copy-notif');
     toast.style.display = 'block';
@@ -748,7 +751,6 @@ function filterContent() {
     const searchTerm = document.getElementById('mod-search').value.toLowerCase();
     const cards = document.querySelectorAll('#grid-content .card');
     let visibleCount = 0;
-
     cards.forEach(card => {
         const text = card.innerText.toLowerCase();
         if (text.includes(searchTerm)) {
@@ -767,10 +769,8 @@ function filterContent() {
 }
 
 function tab(type, btn) {
-    // SIN SONIDO AQUI
     document.querySelectorAll('.menu button').forEach(b => b.classList.remove('activo'));
     btn.classList.add('activo');
-    
     document.getElementById('mod-search').value = "";
     document.getElementById('no-results').style.display = 'none';
     const searchBar = document.getElementById('search-bar-container');
@@ -843,14 +843,14 @@ function tab(type, btn) {
 }
 
 function toggleAudio() {
-    // SIN SONIDO DE CLICK AQUI (Solo pausa/play música)
     if(audio.paused) { 
         audio.play().then(() => {
-            btnIcon.className = 'fas fa-pause'; 
-        }).catch(e => console.log("Play error", e));
+            btnIcon.className = 'fas fa-pause';
+            startVisualizer(); // Reactiva el visualizador si estaba detenido
+        }).catch(e => console.log("Error al reproducir:", e));
     } 
     else { 
-        audio.pause(); 
+        audio.pause();
         btnIcon.className = 'fas fa-play';
     }
 }
