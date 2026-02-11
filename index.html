@@ -286,7 +286,8 @@
         .card h3 { 
             font-family: 'Orbitron', sans-serif;
             color: var(--accent); margin-bottom: 0px; /* Reducido para la linea */
-            text-transform: uppercase; font-weight: 900; font-size: 1.4rem; letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 900; font-size: 1.4rem; letter-spacing: 2px;
         }
 
         /* --- [NUEVO] LINEA SEPARADORA & ETIQUETAS --- */
@@ -422,11 +423,14 @@
         #btn-music:hover { transform: scale(1.1); background: #fff; }
 
         /* Slider de Volumen */
-        input[type="range"] { -webkit-appearance: none;
-            width: 80px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 5px; outline: none;
+        input[type="range"] { -webkit-appearance: none; width: 80px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 5px; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { 
+            -webkit-appearance: none; 
+            width: 18px; /* [MEJORA ANDROID] Un poco más grande para dedos */
+            height: 18px; 
+            border-radius: 50%; background: var(--accent);
+            cursor: pointer; box-shadow: 0 0 10px var(--accent); transition: 0.2s; 
         }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--accent);
-            cursor: pointer; box-shadow: 0 0 10px var(--accent); transition: 0.2s; }
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.3); }
 
         /* Ecualizador REAL */
@@ -648,20 +652,32 @@ const btnIcon = document.getElementById('music-icon');
 // Cargar volumen guardado
 const savedVol = localStorage.getItem('audioVolume');
 if(savedVol !== null) {
-    audio.volume = parseFloat(savedVol);
+    // Si ya hay volumen guardado, se prepara para el GainNode
     document.getElementById('vol-slider').value = savedVol;
 }
 
-// INYECCIÓN: LÓGICA DE ECUALIZADOR REAL (Web Audio API)
-let audioContext, analyser, dataArray, source;
+// [INYECTADO MEJORADO] Lógica Web Audio API con GainNode para Android/iOS
+let audioContext, analyser, dataArray, source, gainNode; // Agregado gainNode
+
 function setupRealVisualizer() {
     const audioEl = document.getElementById('musica');
     if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         analyser = audioContext.createAnalyser();
+        
+        // 1. Crear nodo de ganancia (Control de volumen real)
+        gainNode = audioContext.createGain();
+        
         source = audioContext.createMediaElementSource(audioEl);
-        source.connect(analyser);
+        
+        // 2. Conexión en cadena: Fuente -> Ganancia -> Analizador -> Altavoces
+        source.connect(gainNode);
+        gainNode.connect(analyser);
         analyser.connect(audioContext.destination);
+        
+        // 3. Aplicar volumen inicial
+        const savedVol = localStorage.getItem('audioVolume') || 0.5;
+        gainNode.gain.value = savedVol;
         
         analyser.fftSize = 64; 
         const bufferLength = analyser.frequencyBinCount;
@@ -819,8 +835,12 @@ function tab(type, btn) {
                 let media = i.v ? `<div class="media-box video-box" onclick="loadVideo(this, '${i.v}')"><img class="video-thumbnail" src="https://i.ytimg.com/vi/${i.v}/hqdefault.jpg" loading="lazy"><div class="play-button"></div></div>` : (i.img ? `<div class="media-box"><img src="${i.img}" alt="Preview" onclick="openZoom('${i.img}')" loading="lazy"></div>` : '');
                 
                 // [CORREGIDO] Pass ahora usa la variable dinámica global, no estática
-                let pass = i.p ? `<p style="font-size:13px; margin:8px 0; color:#fff;"><b style="font-family:'Orbitron'; font-weight:900;">CONTRASEÑA:</b> <span class="pass-badge" onclick="copyPass('${i.p}')" style="color:var(--pass-color); font-weight: 900; font-size: 14px; text-shadow: 0 0 5px var(--pass-color);"><i class="fas fa-copy" style="margin-right:5px; font-size:11px;"></i>${i.p}</span></p>` : '';
-                let creator = `<p style="font-size:13px; margin:8px 0; color:#fff;"><b style="font-family:'Orbitron'; font-weight:900;">CREADOR:</b> <span style="font-weight: 900; color: var(--accent); font-size: 14px; text-transform: uppercase;">${i.c}</span></p>`;
+                let pass = i.p ? `<p style="font-size:13px; margin:8px 0; color:#fff;"><b style="font-family:'Orbitron'; font-weight:900;">CONTRASEÑA:</b> <span class="pass-badge" onclick="copyPass('${i.p}')" style="color:var(--pass-color);
+                font-weight: 900; font-size: 14px; text-shadow: 0 0 5px var(--pass-color);"><i class="fas fa-copy" style="margin-right:5px;
+                font-size:11px;"></i>${i.p}</span></p>` : '';
+                let creator = `<p style="font-size:13px;
+                margin:8px 0; color:#fff;"><b style="font-family:'Orbitron'; font-weight:900;">CREADOR:</b> <span style="font-weight: 900; color: var(--accent); font-size: 14px;
+                text-transform: uppercase;">${i.c}</span></p>`;
 
                 // [NUEVO] Generar HTML de etiquetas
                 let tagsHtml = '';
@@ -847,17 +867,27 @@ function tab(type, btn) {
 
 function toggleAudio() {
     if(audio.paused) { 
-        audio.play(); 
+        audio.play();
         btnIcon.className = 'fas fa-pause'; 
         // Si el contexto estaba suspendido, reanudarlo
         if(audioContext && audioContext.state === 'suspended') audioContext.resume();
     } 
-    else { audio.pause(); btnIcon.className = 'fas fa-play'; }
+    else { audio.pause(); btnIcon.className = 'fas fa-play';
+    }
 }
 
+// [INYECTADO MEJORADO] Función de volumen compatible con Android/iOS
 function setVol(v) { 
-    audio.volume = v; 
+    // Persistencia
     localStorage.setItem('audioVolume', v);
+    
+    // Si existe gainNode (el usuario ya entró), usar Web Audio API para controlar volumen real en móvil
+    if(gainNode) {
+        gainNode.gain.value = v;
+    }
+    
+    // Fallback estándar para navegadores de escritorio que lo soporten sin problemas
+    audio.volume = v; 
 }
 </script>
 </body>
