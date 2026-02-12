@@ -687,17 +687,22 @@ function updateOnline() {
 }
 
 function init() {
+    // 1. Sonido de click inmediato
     document.getElementById('click-sound').play();
     
-    // Iniciar Música Simple (Sin API complejas que causan bloqueo)
+    // 2. [CORRECCIÓN CRÍTICA] Intentar reproducir la música AQUÍ, 
+    // inmediatamente al recibir el click para que el navegador no lo bloquee.
     audio.play().then(() => {
         btnIcon.className = 'fas fa-pause';
-        playerBar.classList.add('playing'); // Activa animacion CSS
+        playerBar.classList.add('playing');
     }).catch(e => {
-        console.log("Autoplay prevenido por navegador, esperando click manual");
+        console.log("El navegador bloqueó el audio o el enlace está caído.");
     });
 
+    // 3. Animación visual (Desvanecer intro)
     document.getElementById('intro-overlay').style.opacity = '0';
+
+    // 4. Esperar a que termine la animación visual para mostrar el resto
     setTimeout(() => {
         document.getElementById('intro-overlay').style.display = 'none';
         document.getElementById('main-ui').style.display = 'block';
@@ -710,7 +715,7 @@ function init() {
        
         tab('equipo', document.querySelector('.menu button'));
         loop();
-    }, 600);
+    }, 600); 
 }
 
 function loadVideo(div, id) {
@@ -851,4 +856,5 @@ function setVol(v) {
 </script>
 </body>
 </html>
+
 
