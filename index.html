@@ -523,7 +523,7 @@
 <div class="bg-glow"></div><canvas id="cyber-canvas"></canvas><div id="copy-notif" class="copy-toast">¡CONTRASEÑA COPIADA!</div>
 
 <audio id="click-sound" src=""></audio>
-<audio id="musica" loop preload="auto" crossorigin="anonymous" src="https://files.catbox.moe/v4opmi.mp3"></audio>
+<audio id="musica" loop preload="auto" crossorigin="anonymous" playsinline src="https://files.catbox.moe/v4opmi.mp3"></audio>
 
 <div id="intro-overlay">
     <img src="https://i.postimg.cc/k4YWk9Sw/a779679ec40164b9b49a56487828cad2.gif" style="width:200px; margin-bottom:20px;">
@@ -566,7 +566,7 @@
             <h2>¡¡ AQUÍ NUESTRAS PLATAFORMAS OFICIALES !!</h2>
             <div class="social-links">
                 <a href="https://discord.gg/ChGc4eDcQ7" target="_blank" class="social-btn discord-style"><i class="fab fa-discord"></i> DISCORD</a>
-                 
+                
                 <a href="https://www.youtube.com/@Yith.7" target="_blank" class="social-btn youtube-style"><i class="fab fa-youtube"></i> YOUTUBE</a>
                 
                 <a href="https://wa.me/+584125057144" target="_blank" class="social-btn whatsapp-style"><i class="fab fa-whatsapp"></i> WHATSAPP</a>
@@ -617,10 +617,8 @@ const DATA = {
     ],
     venta: []
 };
-
 // LÓGICA PARA CAMBIAR EL COLOR + PERSISTENCIA
 let currentThemeIndex = localStorage.getItem('savedThemeIdx') ? parseInt(localStorage.getItem('savedThemeIdx')) : 0;
-
 // [MEJORADO] Se agregan colores base y transparente para efectos de brillo (destello)
 const themes = [
     { primary: '#00d4ff', dim: 'rgba(0, 157, 255, 0.5)', transparent: 'rgba(0, 157, 255, 0.05)' }, // Cyan
@@ -629,7 +627,6 @@ const themes = [
     { primary: '#ffcc00', dim: 'rgba(255, 204, 0, 0.5)', transparent: 'rgba(255, 204, 0, 0.05)' }, // Gold
     { primary: '#ff0000', dim: 'rgba(255, 0, 0, 0.5)', transparent: 'rgba(255, 0, 0, 0.05)' }     // Red
 ];
-
 function applyTheme(index) {
     const theme = themes[index];
     const root = document.documentElement.style;
@@ -651,7 +648,8 @@ function changeTheme() {
     currentThemeIndex = (currentThemeIndex + 1) % themes.length;
     applyTheme(currentThemeIndex);
     localStorage.setItem('savedThemeIdx', currentThemeIndex);
-    document.getElementById('click-sound').play();
+    // Intento seguro de sonido click
+    try { document.getElementById('click-sound').play().catch(e=>{}); } catch(e){}
 }
 
 const canvas = document.getElementById('cyber-canvas');
@@ -667,7 +665,7 @@ function loop() {
     requestAnimationFrame(loop);
 }
 
-// --- LOGICA DE MUSICA SIMPLIFICADA (SIN ERRORES) ---
+// --- LOGICA DE MUSICA SIMPLIFICADA (MEJORADA PARA MÓVIL) ---
 const audio = document.getElementById('musica');
 const btnIcon = document.getElementById('music-icon');
 const playerBar = document.getElementById('player-music-bar');
@@ -687,22 +685,46 @@ function updateOnline() {
 }
 
 function init() {
-    // 1. Sonido de click inmediato
-    document.getElementById('click-sound').play();
+    // [FIX MOVIL] 1. La música debe ser la PRIMERA acción para "capturar" el gesto del usuario.
+    // Esto es crucial para iPhones y Androids estrictos.
     
-    // 2. [CORRECCIÓN CRÍTICA] Intentar reproducir la música AQUÍ, 
-    // inmediatamente al recibir el click para que el navegador no lo bloquee.
-    audio.play().then(() => {
-        btnIcon.className = 'fas fa-pause';
-        playerBar.classList.add('playing');
-    }).catch(e => {
-        console.log("El navegador bloqueó el audio o el enlace está caído.");
-    });
+    // Si hay volumen guardado, asegurarlo antes de play
+    if(localStorage.getItem('audioVolume')) {
+        audio.volume = localStorage.getItem('audioVolume');
+    }
+    
+    // Forzamos la carga del buffer (despierta al navegador)
+    audio.load();
+
+    // Intentamos reproducir la música inmediatamente
+    var playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+        playPromise.then(_ => {
+            // Si el navegador aceptó la música:
+            btnIcon.className = 'fas fa-pause';
+            playerBar.classList.add('playing');
+        })
+        .catch(error => {
+            // Si el navegador lo bloqueó (pasa a veces si la red es lenta),
+            // no hacemos nada, el usuario podrá darle play al botón manual después.
+            console.log("Autoplay bloqueado por el navegador o red lenta.");
+        });
+    }
+
+    // 2. Sonido de click (Secundario, envuelto en try/catch para no romper nada)
+    try {
+        const clickSound = document.getElementById('click-sound');
+        // Solo suena si tiene un src válido
+        if(clickSound.getAttribute('src')) {
+            clickSound.play().catch(e => { /* Ignorar errores de click sound */ });
+        }
+    } catch(e) {}
 
     // 3. Animación visual (Desvanecer intro)
     document.getElementById('intro-overlay').style.opacity = '0';
-
-    // 4. Esperar a que termine la animación visual para mostrar el resto
+    
+    // 4. Mostrar interfaz
     setTimeout(() => {
         document.getElementById('intro-overlay').style.display = 'none';
         document.getElementById('main-ui').style.display = 'block';
@@ -712,10 +734,10 @@ function init() {
         
         updateOnline(); 
         setInterval(updateOnline, 5000); 
-       
+        
         tab('equipo', document.querySelector('.menu button'));
         loop();
-    }, 600); 
+    }, 600);
 }
 
 function loadVideo(div, id) {
@@ -842,7 +864,7 @@ function toggleAudio() {
         btnIcon.className = 'fas fa-pause'; 
         playerBar.classList.add('playing'); // Activa animacion CSS
     } else { 
-        audio.pause(); 
+        audio.pause();
         btnIcon.className = 'fas fa-play';
         playerBar.classList.remove('playing'); // Pausa animacion CSS
     }
@@ -856,7 +878,3 @@ function setVol(v) {
 </script>
 </body>
 </html>
-
-
-
-
